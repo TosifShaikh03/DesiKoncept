@@ -46,21 +46,21 @@ console.log("Firebase initialized successfully!");
 
 // ========== RAZORPAY CONFIGURATION ==========
 // IMPORTANT: Replace with your actual Razorpay test/live keys
-const RAZORPAY_CONFIG = {
-  key: "rzp_test_YOUR_TEST_KEY_HERE", // Replace with your test key
-  // For production: key: "rzp_live_YOUR_LIVE_KEY_HERE",
-  currency: "INR",
-  name: "desiKONCEPT",
-  description: "Premium Muesli Products",
-  image: "https://www.desikoncept.in/wp-content/uploads/sites/6/2025/12/cropped-Logo-1.png",
-  theme: {
-    color: "#b47d5a"
-  }
-};
+// const RAZORPAY_CONFIG = {
+//   key: "rzp_test_YOUR_TEST_KEY_HERE", // Replace with your test key
+//   // For production: key: "rzp_live_YOUR_LIVE_KEY_HERE",
+//   currency: "INR",
+//   name: "desiKONCEPT",
+//   description: "Premium Muesli Products",
+//   image: "https://www.desikoncept.in/wp-content/uploads/sites/6/2025/12/cropped-Logo-1.png",
+//   theme: {
+//     color: "#b47d5a"
+//   }
+// };
 
 // Admin emails
 const ADMIN_EMAILS = [
-  'tosifshaikh1707@gmail.com'
+  'admin@gmail.com'
 ];
 
 // ========== STATE MANAGEMENT ==========
