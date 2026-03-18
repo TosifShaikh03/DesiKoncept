@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>desiKONCEPT · Premium Muesli</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..600&display=swap" rel="stylesheet">
+  <!-- Razorpay SDK -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo" id="homeLogo">
+        <img src="https://www.desikoncept.in/wp-content/uploads/sites/6/2025/12/cropped-Logo-1.png" alt="desiKONCEPT"
+          onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'160\' height=\'50\' viewBox=\'0 0 160 50\'%3E%3Crect width=\'160\' height=\'50\' fill=\'%23faf3ed\'/%3E%3Ctext x=\'20\' y=\'32\' font-family=\'Arial\' font-size=\'20\' fill=\'%23ab8e76\'%3EdesiKONCEPT%3C/text%3E%3C/svg%3E';">
+      </div>
+
+      <nav class="nav-menu">
+        <a href="#" onclick="window.showHome()">Home</a>
+        <a onclick="window.filterByCategory('sweet')">Sweet</a>
+        <a onclick="window.filterByCategory('savoury')">Savoury</a>
+        <a href="#">Combos</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="cart-icon" id="cartToggle">
+          <i class="fas fa-shopping-bag"></i>
+          <span class="cart-count" id="cartCount">0</span>
+        </div>
+
+        <div class="auth-area">
+          <span class="user-name" id="userName"></span>
+          <button id="loginBtn"><i class="far fa-user"></i> Sign in</button>
+          <button class="admin-toggle" id="adminToggle" style="display: none;">
+            <i class="fas fa-cog"></i> Admin
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Home Page -->
+  <div id="homePage" class="home-page">
+    <div class="slideshow-container">
+      <div class="slideshow-wrapper">
+        <div class="slide slide1 active">
+          <h2>🌾 SUMMER BERRY MUESLI</h2>
+          <p>15% OFF · LIMITED TIME</p>
+        </div>
+        <div class="slide slide2">
+          <h2>🍫 CHOCOLATE BUCKWHEAT</h2>
+          <p>CRUNCHY · TOASTED · ORGANIC</p>
+        </div>
+        <div class="slide slide3">
+          <h2>🚚 FREE SHIPPING</h2>
+          <p>ON ORDERS OVER ₹499</p>
+        </div>
+        <div class="slide slide4">
+          <h2>🎁 NEW SAVOURY RANGE</h2>
+          <p>MASALA OATS · ITALIAN VERMICELLI</p>
+        </div>
+
+        <button class="slide-prev" id="prevSlide"><i class="fas fa-chevron-left"></i></button>
+        <button class="slide-next" id="nextSlide"><i class="fas fa-chevron-right"></i></button>
+
+        <div class="slide-dots">
+          <span class="dot active"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </div>
+    </div>
+
+    <main>
+      <section class="product-grid-section">
+        <h2 class="section-title">Our Muesli Collection</h2>
+        <div class="product-grid" id="productGrid"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Product Detail Page -->
+  <div id="productDetail" class="product-detail-container">
+    <!-- <button class="back-button" onclick="window.showHome()">
+      <i class="fas fa-arrow-left"></i> Back to Home
+    </button> -->
+    <div id="productDetailContent"></div>
+  </div>
+
+  <!-- Admin Panel (Hidden by default, only shown when admin clicks the admin toggle) -->
+  <div id="adminPanel" class="admin-panel" style="display: none;">
+    <div class="admin-header">
+      <h2>Admin Dashboard <span class="admin-badge">Admin</span></h2>
+      <!-- <button class="back-button" onclick="window.showHome()">
+        <i class="fas fa-arrow-left"></i> Back to Store
+      </button> -->
+    </div>
+
+    <div class="admin-stats">
+      <div class="stat-card">
+        <h3>Total Products</h3>
+        <div class="stat-value" id="totalProducts">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Total Orders</h3>
+        <div class="stat-value" id="totalOrders">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Total Users</h3>
+        <div class="stat-value" id="totalUsers">0</div>
+      </div>
+      <div class="stat-card">
+        <h3>Revenue</h3>
+        <div class="stat-value" id="totalRevenue">₹0</div>
+      </div>
+    </div>
+
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="window.switchAdminTab('products')">Products</button>
+      <button class="admin-tab" onclick="window.switchAdminTab('orders')">Orders</button>
+      <button class="admin-tab" onclick="window.switchAdminTab('users')">Users</button>
+    </div>
+
+    <div class="admin-content" id="adminProducts">
+      <div class="add-product-form">
+        <h3>Add New Product</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Product Name</label>
+            <input type="text" id="newProductName" placeholder="e.g., Classic Oat & Berry">
+          </div>
+          <div class="form-group">
+            <label>Price (₹)</label>
+            <input type="number" id="newProductPrice" step="0.1" placeholder="12.9">
+          </div>
+          <div class="form-group">
+            <label>Original Price (₹)</label>
+            <input type="number" id="newProductOriginalPrice" step="0.1" placeholder="15.9">
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="newProductCategory">
+              <option value="sweet">Sweet</option>
+              <option value="savoury">Savoury</option>
+              <option value="neutral">Neutral</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Product Image</label>
+            <div class="image-preview" id="newProductImagePreview">
+              <i class="fas fa-image"></i>
+            </div>
+            <div class="file-input">
+              <input type="file" id="newProductImage" accept="image/*"
+                onchange="window.previewImage(this, 'newProductImagePreview')">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Short Description</label>
+            <input type="text" id="newProductShortDesc" placeholder="Brief description">
+          </div>
+          <div class="form-group full-width">
+            <label>Long Description</label>
+            <textarea id="newProductLongDesc" rows="3" placeholder="Detailed description..."></textarea>
+          </div>
+        </div>
+        <button class="submit-btn" onclick="window.addNewProduct()">Add Product</button>
+      </div>
+
+      <h3>Current Products</h3>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Stock</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="adminProductsList">
+          <!-- Filled dynamically -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="admin-content" id="adminOrders" style="display: none;">
+      <h3>Recent Orders</h3>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Payment</th>
+            <th>Status</th>
+            <th>Items</th>
+          </tr>
+        </thead>
+        <tbody id="adminOrdersList">
+          <tr>
+            <td colspan="7" style="text-align: center;">No orders yet</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="admin-content" id="adminUsers" style="display: none;">
+      <h3>Registered Users</h3>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Joined</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody id="adminUsersList">
+          <tr>
+            <td colspan="4" style="text-align: center;">Loading users...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Edit Product Modal -->
+  <div class="edit-modal" id="editModal">
+    <button class="close-modal" onclick="window.closeEditModal()">✕</button>
+    <h2 id="editModalTitle">Edit Product</h2>
+    <div id="editForm"></div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div class="checkout-modal" id="checkoutModal">
+    <button class="close-modal" onclick="window.closeCheckoutModal()">✕</button>
+    <div id="checkoutContent"></div>
+  </div>
+
+  <!-- Cart Sidebar -->
+  <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h2>Your Cart</h2>
+      <button class="close-cart" id="closeCart">&times;</button>
+    </div>
+    <div id="cartItems"></div>
+    <div class="cart-total" id="cartTotal">Total: ₹0</div>
+    <button class="checkout-btn" id="checkoutBtn">Proceed to Checkout</button>
+  </div>
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Auth Modal -->
+  <div class="auth-modal" id="authModal">
+    <button class="close-modal" id="closeAuthModal">✕</button>
+    <h2 id="authModalTitle">Sign In</h2>
+    <div id="authError" class="error-message"></div>
+
+    <div class="input-group" id="nameFieldGroup" style="display: none;">
+      <label for="authName">Full Name</label>
+      <input type="text" id="authName" placeholder="Enter your full name">
+    </div>
+
+    <div class="input-group">
+      <label for="authEmail">Email</label>
+      <input type="email" id="authEmail" placeholder="Enter your email" required>
+    </div>
+
+    <div class="input-group">
+      <label for="authPassword">Password</label>
+      <input type="password" id="authPassword" placeholder="Enter your password" required>
+    </div>
+
+    <button type="button" id="authActionBtn">Sign In</button>
+    <div class="auth-toggle" id="authToggle">Don't have an account? Sign Up</div>
+  </div>
+
+  <footer class="site-footer">
+    <p>© 2026 — desiKONCEPT · wholesome desi breakfasts</p>
+  </footer>
+
+<script type="module" src="script.js"></script>
+</body>
+
+</html>
